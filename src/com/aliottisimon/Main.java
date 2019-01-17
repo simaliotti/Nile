@@ -24,9 +24,9 @@ public class Main {
 		//cs.readCommande();
 
 		 CamionService camionService = new CamionService();
-		// camionService.menuCreateCamionPark(sc);
-		 //camionService.readCamion();
-	LoadService ls = new LoadService(CamionType.TYPE_L);
+	//	 camionService.menuCreateCamionPark(sc);
+	//	 camionService.readCamion();
+	LoadService ls = new LoadService(CamionType.TYPE_L, 2);
 	ls.loadCamion();
 
 	

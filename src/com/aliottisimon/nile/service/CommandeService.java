@@ -7,7 +7,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -128,4 +127,10 @@ public class CommandeService {
 	return commandes;
 	}
 
+	public void deleteCommande(String nameCommande) {
+		
+		File fileCommande = new File(SystemUtils.TEST_FOLDER+"/commandes/" + nameCommande + ".txt");
+		fileCommande.delete();
+	}
+	
 }

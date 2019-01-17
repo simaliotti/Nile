@@ -10,6 +10,8 @@ import java.io.ObjectOutputStream;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.text.Utilities;
+
 import com.aliottisimon.nile.model.CamionType;
 import com.aliottisimon.nile.pojos.Camion;
 import com.aliottisimon.nile.utils.MyScanner;
@@ -22,7 +24,7 @@ public class CamionService {
 	public void menuCreateCamionPark(MyScanner sc) throws FileNotFoundException, ClassNotFoundException, IOException {
 
 		List<Camion> listCamions = new LinkedList();
-		
+
 		System.out.println("Bienvenue dans le gestionnaire de votre parc");
 		displayCamionChoix();
 		System.out.println("");
@@ -85,14 +87,12 @@ public class CamionService {
 	public static void writeCamion(List<Camion> listCamions)
 			throws FileNotFoundException, IOException, ClassNotFoundException {
 
-		File filePath = new File(SystemUtils.TEST_FOLDER+"/camions");
-		if(!filePath.exists()) {
+		File filePath = new File(SystemUtils.TEST_FOLDER + "/camions");
+		if (!filePath.exists()) {
 			filePath.mkdirs();
 		}
-	
-		
-		
-		File fileCamion = new File(SystemUtils.TEST_FOLDER+"/camions/listCamions.txt");
+
+		File fileCamion = new File(SystemUtils.TEST_FOLDER + "/camions/listCamions.txt");
 
 		try (FileOutputStream fop = new FileOutputStream(fileCamion);
 				ObjectOutputStream oop = new ObjectOutputStream(fop)) {
@@ -110,7 +110,7 @@ public class CamionService {
 	public static void readCamion() throws FileNotFoundException, IOException, ClassNotFoundException {
 
 		// Lit chaque commande
-		File fileCamion = new File(SystemUtils.TEST_FOLDER+"/camions/listCamions.txt");
+		File fileCamion = new File(SystemUtils.TEST_FOLDER + "/camions/listCamions.txt");
 
 		try (FileInputStream fis = new FileInputStream(fileCamion);
 				ObjectInputStream ois = new ObjectInputStream(fis)) {
@@ -131,4 +131,27 @@ public class CamionService {
 
 	}
 
+	public void makeCamionNonDisponible(int idCamionToDelete)
+			throws FileNotFoundException, IOException, ClassNotFoundException {
+		// Lit chaque commande
+		File fileCamion = new File(SystemUtils.TEST_FOLDER + "/camions/listCamions.txt");
+
+		try (FileInputStream fis = new FileInputStream(fileCamion);
+				ObjectInputStream ois = new ObjectInputStream(fis)) {
+
+			List<Camion> listCamions = (List<Camion>) ois.readObject();
+			Camion updatedCamion = null;
+			for (Camion camion : listCamions) {
+				if (camion.getId() == idCamionToDelete) {
+					updatedCamion = new Camion(camion.getType(), camion.getId());
+					updatedCamion.setDisponible(false);
+					listCamions.remove(camion);
+					listCamions.add(updatedCamion);
+					break;
+				}
+			}
+
+			writeCamion(listCamions);
+		}
+	}
 }
