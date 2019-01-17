@@ -2,6 +2,8 @@ package com.aliottisimon;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 import com.aliottisimon.nile.model.CamionType;
 import com.aliottisimon.nile.service.CamionService;
@@ -25,8 +27,18 @@ public class Main {
 		// camionService.menuCreateCamionPark(sc);
 		 //camionService.readCamion();
 	LoadService ls = new LoadService(CamionType.TYPE_L);
-	ls.loadCamion();
+	//ls.loadCamion();
 
+	List<Integer> listInt = new LinkedList<>();
+	listInt.add(45);
+	System.out.println(listInt);
+	for (Integer integer : listInt) {
+		System.out.println("--");
+		System.out.println("integer :"+integer);
+		
+	}
+	
+	
 	}
 
 }
