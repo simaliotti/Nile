@@ -27,16 +27,8 @@ public class Main {
 		// camionService.menuCreateCamionPark(sc);
 		 //camionService.readCamion();
 	LoadService ls = new LoadService(CamionType.TYPE_L);
-	//ls.loadCamion();
+	ls.loadCamion();
 
-	List<Integer> listInt = new LinkedList<>();
-	listInt.add(45);
-	System.out.println(listInt);
-	for (Integer integer : listInt) {
-		System.out.println("--");
-		System.out.println("integer :"+integer);
-		
-	}
 	
 	
 	}
