@@ -12,12 +12,12 @@ public class Main {
 	public static void main(String[] args) throws FileNotFoundException, ClassNotFoundException, IOException {
 		
 		MyScanner sc =  new MyScanner();
-		//CommandeService cs = new CommandeService(sc);
-		//cs.generateCommande();
-		//cs.readCommande();
-		//System.out.println("---------------------------------------");
-		//cs.generateCommande();
-		//cs.readCommande();
+	//	CommandeService cs = new CommandeService(sc);
+	//	cs.generateCommande();
+	//	cs.readCommande();
+	//	System.out.println("---------------------------------------");
+	//	cs.generateCommande();
+	//	cs.readCommande();
 		
 		
 	CamionService camionService = new CamionService();

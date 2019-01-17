@@ -15,12 +15,13 @@ import java.util.Random;
 import com.aliottisimon.nile.pojos.Carton;
 import com.aliottisimon.nile.pojos.Commande;
 import com.aliottisimon.nile.utils.MyScanner;
+import com.aliottisimon.nile.utils.SystemUtils;
 
 public class CommandeService {
 
 	MyScanner sc = null;
 	private int numberOfCommand = 1;
-	
+
 	public CommandeService(MyScanner sc) {
 		super();
 		this.sc = sc;
@@ -32,8 +33,8 @@ public class CommandeService {
 		int numberOfCommandToGenerate = (random.nextInt(6) + 2);
 
 		for (int i = 1; i <= numberOfCommandToGenerate; i++) {
-			
-			String nameCommande = "Commande"+this.numberOfCommand;
+
+			String nameCommande = "Commande" + this.numberOfCommand;
 			this.numberOfCommand++;
 			Commande commande = new Commande(nameCommande);
 			writeCommand(commande);
@@ -54,7 +55,7 @@ public class CommandeService {
 	public static void writeCommand(Commande commande)
 			throws FileNotFoundException, IOException, ClassNotFoundException {
 
-		File fileCommande = new File("/Users/simonaliotti/nile/commandes/" + commande.getIdCommande() + ".txt");
+		File fileCommande = new File(SystemUtils.TEST_FOLDER+"/commandes/" + commande.getIdCommande() + ".txt");
 
 		try (FileOutputStream fop = new FileOutputStream(fileCommande);
 				ObjectOutputStream oop = new ObjectOutputStream(fop)) {
@@ -71,10 +72,10 @@ public class CommandeService {
 
 	public static void readCommande() throws FileNotFoundException, IOException, ClassNotFoundException {
 
-		//Liste toutes les commandes
+		// Liste toutes les commandes
 		List<String> listCommandes = new LinkedList<>();
 
-		File file = new File("/Users/simonaliotti/nile/commandes");
+		File file = new File(SystemUtils.TEST_FOLDER+"/commandes");
 
 		System.out.println("Liste des commandes enregistrés :");
 
@@ -93,8 +94,8 @@ public class CommandeService {
 		}
 
 		for (String nameCommande : listCommandes) {
-			//Lit chaque commande
-			File fileCommande = new File("/Users/simonaliotti/nile/commandes/"+nameCommande+".txt");
+			// Lit chaque commande
+			File fileCommande = new File(SystemUtils.TEST_FOLDER+"/commandes/" + nameCommande + ".txt");
 
 			try (FileInputStream fis = new FileInputStream(fileCommande);
 					ObjectInputStream ois = new ObjectInputStream(fis)) {
@@ -116,7 +117,4 @@ public class CommandeService {
 		}
 	}
 
-	
-
-	
 }

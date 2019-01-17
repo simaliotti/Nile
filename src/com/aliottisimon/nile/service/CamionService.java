@@ -15,6 +15,7 @@ import com.aliottisimon.nile.pojos.Camion;
 import com.aliottisimon.nile.pojos.Carton;
 import com.aliottisimon.nile.pojos.Commande;
 import com.aliottisimon.nile.utils.MyScanner;
+import com.aliottisimon.nile.utils.SystemUtils;
 
 public class CamionService {
 
@@ -87,7 +88,7 @@ public class CamionService {
 	public static void writeCamion(List<Camion> listCamions)
 			throws FileNotFoundException, IOException, ClassNotFoundException {
 
-		File fileCamion = new File("/Users/simonaliotti/nile/camions/listCamions.txt");
+		File fileCamion = new File(SystemUtils.TEST_FOLDER+"/camions/listCamions.txt");
 
 		try (FileOutputStream fop = new FileOutputStream(fileCamion);
 				ObjectOutputStream oop = new ObjectOutputStream(fop)) {
@@ -105,7 +106,7 @@ public class CamionService {
 	public static void readCamion() throws FileNotFoundException, IOException, ClassNotFoundException {
 
 		// Lit chaque commande
-		File fileCamion = new File("/Users/simonaliotti/nile/camions/listCamions.txt");
+		File fileCamion = new File(SystemUtils.TEST_FOLDER+"/camions/listCamions.txt");
 
 		try (FileInputStream fis = new FileInputStream(fileCamion);
 				ObjectInputStream ois = new ObjectInputStream(fis)) {
