@@ -14,18 +14,15 @@ import java.util.Random;
 
 import com.aliottisimon.nile.pojos.Carton;
 import com.aliottisimon.nile.pojos.Commande;
-import com.aliottisimon.nile.utils.MyScanner;
+
 import com.aliottisimon.nile.utils.SystemUtils;
 
 public class CommandeService {
 
-	MyScanner sc = null;
+
 	private int numberOfCommand = 1;
 
-	public CommandeService(MyScanner sc) {
-		super();
-		this.sc = sc;
-	}
+
 
 	public void generateCommande() throws FileNotFoundException, ClassNotFoundException, IOException {
 
@@ -55,11 +52,20 @@ public class CommandeService {
 	public static void writeCommand(Commande commande)
 			throws FileNotFoundException, IOException, ClassNotFoundException {
 
+		
+		File filePath = new File(SystemUtils.TEST_FOLDER+"/commandes");
+		if(!filePath.exists()) {
+			filePath.mkdirs();
+		}
+	
+		
 		File fileCommande = new File(SystemUtils.TEST_FOLDER+"/commandes/" + commande.getIdCommande() + ".txt");
 
 		try (FileOutputStream fop = new FileOutputStream(fileCommande);
 				ObjectOutputStream oop = new ObjectOutputStream(fop)) {
 
+			
+			
 			if (!fileCommande.exists()) {
 				fileCommande.createNewFile();
 			}
@@ -70,7 +76,7 @@ public class CommandeService {
 
 	}
 
-	public static void readCommande() throws FileNotFoundException, IOException, ClassNotFoundException {
+	public static List<Commande> readCommande() throws FileNotFoundException, IOException, ClassNotFoundException {
 
 		// Liste toutes les commandes
 		List<String> listCommandes = new LinkedList<>();
@@ -93,6 +99,8 @@ public class CommandeService {
 
 		}
 
+		List<Commande> commandes = new LinkedList<>();
+		
 		for (String nameCommande : listCommandes) {
 			// Lit chaque commande
 			File fileCommande = new File(SystemUtils.TEST_FOLDER+"/commandes/" + nameCommande + ".txt");
@@ -101,7 +109,9 @@ public class CommandeService {
 					ObjectInputStream ois = new ObjectInputStream(fis)) {
 
 				Commande commande = (Commande) ois.readObject();
-
+				commandes.add(commande);
+				
+				//Lecture des cartons de chaque commande
 				System.out.println("======================");
 				System.out.println(commande.getIdCommande());
 				for (Carton carton : commande.getListCarton()) {
@@ -115,6 +125,7 @@ public class CommandeService {
 			}
 
 		}
+	return commandes;
 	}
 
 }

@@ -12,14 +12,11 @@ import java.util.List;
 
 import com.aliottisimon.nile.model.CamionType;
 import com.aliottisimon.nile.pojos.Camion;
-import com.aliottisimon.nile.pojos.Carton;
-import com.aliottisimon.nile.pojos.Commande;
 import com.aliottisimon.nile.utils.MyScanner;
 import com.aliottisimon.nile.utils.SystemUtils;
 
 public class CamionService {
 
-	MyScanner sc = null;
 	private int idCamion = 1;
 
 	public void menuCreateCamionPark(MyScanner sc) throws FileNotFoundException, ClassNotFoundException, IOException {
@@ -88,6 +85,13 @@ public class CamionService {
 	public static void writeCamion(List<Camion> listCamions)
 			throws FileNotFoundException, IOException, ClassNotFoundException {
 
+		File filePath = new File(SystemUtils.TEST_FOLDER+"/camions");
+		if(!filePath.exists()) {
+			filePath.mkdirs();
+		}
+	
+		
+		
 		File fileCamion = new File(SystemUtils.TEST_FOLDER+"/camions/listCamions.txt");
 
 		try (FileOutputStream fop = new FileOutputStream(fileCamion);

@@ -8,6 +8,7 @@ public class Camion implements Serializable{
 
 	CamionType type = null;
 	int id = 0;
+	boolean disponible = true;
 	
 	
 	
@@ -39,6 +40,18 @@ public class Camion implements Serializable{
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+
+
+	public boolean isDisponible() {
+		return disponible;
+	}
+
+
+
+	public void setDisponible(boolean disponible) {
+		this.disponible = disponible;
 	}
 	
 
