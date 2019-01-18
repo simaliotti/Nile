@@ -58,17 +58,17 @@ public class CamionLoadedService {
 
 	}
 
-	public static void readCamionLoaded(int idCamionLoaded)
+	public static CamionLoaded readCamionLoaded(int idCamionLoaded)
 			throws FileNotFoundException, IOException, ClassNotFoundException {
 
 		// Lit chaque commande
 		File fileCamionLoaded = new File(
 				SystemUtils.TEST_FOLDER + "/camionLoaded/CamionLoaded-" + idCamionLoaded + ".txt");
-
+		CamionLoaded camionLoaded = null;
 		try (FileInputStream fis = new FileInputStream(fileCamionLoaded);
 				ObjectInputStream ois = new ObjectInputStream(fis)) {
 
-			CamionLoaded camionLoaded = (CamionLoaded) ois.readObject();
+			camionLoaded = (CamionLoaded) ois.readObject();
 			System.out.println(camionLoaded.getType());
 			System.out.println(camionLoaded.getId());
 			System.out.println(camionLoaded.getListCartonLoaded());
@@ -88,6 +88,6 @@ public class CamionLoadedService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		return camionLoaded;
 	}
 }

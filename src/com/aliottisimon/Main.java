@@ -20,7 +20,7 @@ public class Main {
 		MyScanner sc = new MyScanner();
 		CommandeService cs = new CommandeService();
 		cs.generateCommande();
-	//	cs.readCommande();
+		//cs.readCommande();
 	//	System.out.println("---------------------------------------");
 		// cs.generateCommande();
 		// cs.readCommande();
@@ -34,6 +34,9 @@ public class Main {
 		CamionLoadedService cls = new CamionLoadedService();
 		cls.readCamionLoaded(2);
 
+		
+		
+		
 	}
 
 }
