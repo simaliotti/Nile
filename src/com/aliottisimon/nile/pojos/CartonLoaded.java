@@ -2,6 +2,8 @@ package com.aliottisimon.nile.pojos;
 
 import java.io.Serializable;
 
+import com.aliottisimon.nile.model.CartonType;
+
 public class CartonLoaded implements Serializable {
 
 	private int idCamion = 0;
@@ -9,16 +11,20 @@ public class CartonLoaded implements Serializable {
 	private String id = null;
 	private int idRack = 0;
 	private int floor = 0;
+	private CartonType cartonType = null;
 	
 	
-	public CartonLoaded(int idCamion, int idPlace, String id, int idRack, int floor) {
+	public CartonLoaded(int idCamion, int idPlace, String id, int idRack, int floor, CartonType cartonType) {
 		super();
 		this.idCamion = idCamion;
 		this.idPlace = idPlace;
 		this.id = id;
 		this.idRack = idRack;
 		this.floor = floor;
+		this.cartonType = cartonType;
 	}
+	
+	
 	public int getIdCamion() {
 		return idCamion;
 	}
@@ -49,6 +55,14 @@ public class CartonLoaded implements Serializable {
 	public void setFloor(int floor) {
 		this.floor = floor;
 	}
+	public CartonType getCartonType() {
+		return cartonType;
+	}
+	public void setCartonType(CartonType cartonType) {
+		this.cartonType = cartonType;
+	}
+	
+	
 	
 	
 	

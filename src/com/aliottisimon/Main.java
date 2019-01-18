@@ -20,21 +20,20 @@ public class Main {
 		MyScanner sc = new MyScanner();
 		CommandeService cs = new CommandeService();
 		cs.generateCommande();
-		 cs.readCommande();
-		 System.out.println("---------------------------------------");
+	//	cs.readCommande();
+	//	System.out.println("---------------------------------------");
 		// cs.generateCommande();
-		//cs.readCommande();
+		// cs.readCommande();
 
-		 CamionService camionService = new CamionService();
-	//	camionService.menuCreateCamionPark(sc);
+		CamionService camionService = new CamionService();
+	//	 camionService.menuCreateCamionPark(sc);
 	//	 camionService.readCamion();
-	LoadService ls = new LoadService(CamionType.TYPE_L, 2);
-	ls.loadCamion();
-	// camionService.readCamion();
-	CamionLoadedService cls = new CamionLoadedService();
-	cls.readCamionLoaded(2);
-		
-	
+		LoadService ls = new LoadService(CamionType.TYPE_L, 2);
+		ls.loadCamion();
+	//	 camionService.readCamion();
+		CamionLoadedService cls = new CamionLoadedService();
+		cls.readCamionLoaded(2);
+
 	}
 
 }
