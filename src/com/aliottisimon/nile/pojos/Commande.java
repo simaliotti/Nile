@@ -21,7 +21,7 @@ public class Commande implements Serializable{
 		Random random = new Random();
 
 		//modifie temporairement le random en fix random.nextInt(20)
-		for (int i = 0; i <110; i++) {
+		for (int i = 0; i <80; i++) {
 			
 			String numeroCarton = String.valueOf(i);
 			String idCarton = this.idCommande+"-"+"Carton"+numeroCarton;
