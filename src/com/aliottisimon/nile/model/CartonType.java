@@ -10,9 +10,10 @@ public enum CartonType {
 	private int largeur;
 	private int hauteur;
 	
-	private CartonType(int largeur, int longueur, int hauteur) {
-		this.largeur = largeur;
+	private CartonType(int longueur, int largeur,int hauteur) {
+	
 		this.longueur = longueur;
+		this.largeur = largeur;
 		this.hauteur = hauteur;
 	}
 

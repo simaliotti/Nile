@@ -121,6 +121,7 @@ public class CamionService {
 				System.out.println("-------CAMION---------");
 				System.out.println(camion.getId());
 				System.out.println(camion.getType().toString());
+				System.out.println(camion.isDisponible());
 				System.out.println("---------------");
 
 			}

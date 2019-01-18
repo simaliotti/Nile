@@ -3,6 +3,7 @@ package com.aliottisimon.nile.service;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -47,6 +48,7 @@ public class LoadService {
 		this.idCamion = idCamion;
 	}
 
+	
 	/**
 	 * Méthode permeettant de charger un camion
 	 * 
@@ -57,8 +59,11 @@ public class LoadService {
 	public void loadCamion() throws FileNotFoundException, ClassNotFoundException, IOException {
 
 		int commandeNumber = listCommandes.size();
-		List<CartonLoaded> listCartonLoaded = null;
+		List<CartonLoaded> listCartonLoaded = new LinkedList();
 		CamionLoaded camionLoaded = null;
+		int rackEnCoursDeChargement = 0;
+		int longueurDeRackChargee = 0;
+		int etageEnCoursDeChargement = 0;
 
 		//Boucle sur les commandes à charger
 		
@@ -68,6 +73,7 @@ public class LoadService {
 			Stream<Carton> streamL = commande.getListCarton().stream();
 			streamL = streamL.filter(carton -> carton.getType().equals(CartonType.TYPE_L));
 			List<Carton> listCartonsL = streamL.collect(Collectors.toList()); // Liste des cartons taille L
+			
 
 			Stream<Carton> streamM = commande.getListCarton().stream();
 			streamM = streamM.filter(carton -> carton.getType().equals(CartonType.TYPE_M));
@@ -91,45 +97,56 @@ public class LoadService {
 
 					// Charge les cartons type L
 					if (listCartonsL.size() > 0) {
+						List<Carton>listDeleteCartonL = new LinkedList();
 						for (Carton cartonL : listCartonsL) {
+							
 							longueurCartonCumul += cartonL.getType().getLongueur();
 							if (longueurCartonCumul <= camionType.getLongueur()) {
 								counteridPlace++;
 								CartonLoaded cl = new CartonLoaded(idCamion, counteridPlace, cartonL.getIdCarton(),
 										rackNumber, i); // load carton
 								listCartonLoaded.add(cl);
-								listCartonsL.remove(cartonL); // remove carton from list
+								listDeleteCartonL.add(cartonL); // remove carton from list
 							} else {
 								break;
 							}
+						}
+						for (Carton carton : listDeleteCartonL) {
+							listCartonsL.remove(carton);
 						}
 					}
 
 					// charge les cartons type M
 					int counterM = 0;
 					if (listCartonsM.size() > 0) {
-
+						List<Carton>listDeleteCartonM = new LinkedList();
 						for (Carton cartonM : listCartonsM) {
-							counterM = counterM++;
+							counterM++;
 							if ((counterM % 2) != 0) {
 								longueurCartonCumul += cartonM.getType().getLongueur();
 							}
 							if (longueurCartonCumul <= camionType.getLongueur()) {
+								counteridPlace++;
 								CartonLoaded cl = new CartonLoaded(idCamion, counteridPlace, cartonM.getIdCarton(),
 										rackNumber, i); // load carton
 								listCartonLoaded.add(cl);
-								listCartonsM.remove(cartonM); // remove carton from list
+								listDeleteCartonM.add(cartonM); // remove carton from list
 							} else {
 								break;
 							}
 						}
+						for (Carton carton : listDeleteCartonM) {
+							listCartonsM.remove(carton);
+						}
 					}
+					
 
 					// charge les cartons type S
 					int counterS1 = 0;
 					int counterS2 = 0;
 
 					if (listCartonsS.size() > 0) {
+						List<Carton>listDeleteCartonS = new LinkedList();
 						for (Carton cartonS : listCartonsS) {
 							counterS1++;
 							counterS2++;
@@ -143,10 +160,11 @@ public class LoadService {
 							}
 
 							if (longueurCartonCumul <= camionType.getLongueur()) {
+								counteridPlace++;
 								CartonLoaded cl = new CartonLoaded(idCamion, counteridPlace, cartonS.getIdCarton(),
 										rackNumber, i); // load carton
 								listCartonLoaded.add(cl);
-								listCartonsM.remove(cartonS); // remove carton from list
+								listDeleteCartonS.add(cartonS);  // remove carton from list
 							} else {
 								// set rack at full state
 								switch (rackNumber) {
@@ -162,6 +180,9 @@ public class LoadService {
 								}
 								break;
 							}
+						}
+						for (Carton carton : listDeleteCartonS) {
+							listCartonsS.remove(carton);
 						}
 					}
 					// verifie si la commande est toute chargée
@@ -181,10 +202,15 @@ public class LoadService {
 						&& i == camionFloors) {
 					this.isCamionFull = true; // camion plein et il reste des elements de commande en cours
 					// retirer la commande du camion
+					List<CartonLoaded> listCartonLoadedToDelete = new LinkedList();
 					for (CartonLoaded cartonLoaded : listCartonLoaded) {
 						if (cartonLoaded.getId().contains(commande.getIdCommande())) {
-							listCartonLoaded.remove(cartonLoaded);
+							listCartonLoadedToDelete.add(cartonLoaded);
+							
 						}
+					}
+					for (CartonLoaded cartonLoadedToDelete : listCartonLoadedToDelete) {
+						listCartonLoaded.remove(cartonLoadedToDelete);
 					}
 				}
 			}

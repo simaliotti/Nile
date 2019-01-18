@@ -27,8 +27,8 @@ public class CommandeService {
 
 		Random random = new Random();
 		int numberOfCommandToGenerate = (random.nextInt(6) + 2);
-
-		for (int i = 1; i <= numberOfCommandToGenerate; i++) {
+	//	numberOfCommandToGenerate
+		for (int i = 1; i <= 1; i++) {
 
 			String nameCommande = "Commande" + this.numberOfCommand;
 			this.numberOfCommand++;

@@ -20,7 +20,8 @@ public class Commande implements Serializable{
 		List<Carton> cartons = new LinkedList();
 		Random random = new Random();
 
-		for (int i = 0; i < random.nextInt(20); i++) {
+		//modifie temporairement le random en fix random.nextInt(20)
+		for (int i = 0; i < 120; i++) {
 			
 			String numeroCarton = String.valueOf(i);
 			String idCarton = this.idCommande+"-"+"Carton"+numeroCarton;

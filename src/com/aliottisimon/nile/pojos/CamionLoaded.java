@@ -1,10 +1,11 @@
 package com.aliottisimon.nile.pojos;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.aliottisimon.nile.model.CamionType;
 
-public class CamionLoaded {
+public class CamionLoaded implements Serializable{
 
 	private CamionType type = null;
 	private int id = 0;
