@@ -61,17 +61,15 @@ public class LoadService {
 	public void loadCamion() throws FileNotFoundException, ClassNotFoundException, IOException {
 
 		int commandeNumber = listCommandes.size();
-
+		Commande commandeEnCours = listCommandes.get(0);
 		List<CartonLoaded> listCartonLoaded = new LinkedList();
 		CamionLoaded camionLoaded = null;
-
-		
 
 		// valeur utilisées lorsqu'on charge une nouvelle commande dans le camion
 		int floorEnCoursChargement = 1;
 		int rackEnCoursChargement = 1;
-		int longueurCartonCumulEnCoursChargement = 0;
-		int idPlaceRackEnCoursChargement = 0;
+		int counteridPlace = 0;
+		int longueurCartonCumul = 0;
 
 		// Boucle sur chaque commande
 		for (Commande commande : listCommandes) {
@@ -91,18 +89,26 @@ public class LoadService {
 
 			// rempli le camion sur un etage
 			for (int i = floorEnCoursChargement; i <= camionFloors; i++) {
-				floorEnCoursChargement = i; 
+				floorEnCoursChargement = i;
 
 				// remplissage d'un rack
+				if (commandeEnCours.equals(commande)) {
+					rackEnCoursChargement = 1;
+				}
+				
 				
 				for (int rackNumber = rackEnCoursChargement; rackNumber <= 3; rackNumber++) {
-				
-					int counteridPlace = 0;
-					int longueurCartonCumul = 0;
+					rackEnCoursChargement = rackNumber;
+
+					if (commandeEnCours.equals(commande)) {
+						counteridPlace = 0;
+						longueurCartonCumul = 0;
+					}
+					commandeEnCours = commande;
 
 					// Charge les cartons de type L
 					if (listCartonsL.size() > 0) {
-						
+
 						List<Carton> listDeleteCartonL = new LinkedList();
 						for (Carton cartonL : listCartonsL) {
 							longueurCartonCumul += cartonL.getType().getLongueur();
@@ -118,7 +124,7 @@ public class LoadService {
 							}
 						}
 						for (Carton carton : listDeleteCartonL) {
-							listCartonsL.remove(carton); //retire les cartons chargés de la liste de cartons à charger
+							listCartonsL.remove(carton); // retire les cartons chargés de la liste de cartons à charger
 						}
 					}
 
@@ -128,7 +134,8 @@ public class LoadService {
 						List<Carton> listDeleteCartonM = new LinkedList();
 						for (Carton cartonM : listCartonsM) {
 							counterM++;
-							if ((counterM % 2) != 0) { //il faut deux cartons M (70*35) pour faire avancer la longueur gloable utilisée dans un rack
+							if ((counterM % 2) != 0) { // il faut deux cartons M (70*35) pour faire avancer la longueur
+														// gloable utilisée dans un rack
 								longueurCartonCumul += cartonM.getType().getLongueur();
 							}
 							if (longueurCartonCumul <= camionType.getLongueur()) {
@@ -137,7 +144,7 @@ public class LoadService {
 										rackNumber, i, cartonM.getType()); // load carton
 								listCartonLoaded.add(cl);
 								listDeleteCartonM.add(cartonM); // remove carton from list
-							} else {	
+							} else {
 								if ((counterM % 2) != 0) {
 									longueurCartonCumul -= cartonM.getType().getLongueur();
 									counterM--;
@@ -190,8 +197,7 @@ public class LoadService {
 							listCartonsS.remove(carton);
 						}
 					}
-				//	idPlaceRackEnCoursChargement = counteridPlace;
-				//	longueurCartonCumulEnCoursChargement = longueurCartonCumul;
+
 					// verifie si la commande est toute chargée
 					if (listCartonsL.isEmpty() && listCartonsM.isEmpty() && listCartonsS.isEmpty()) {
 						break; // on sort du remplissage des racks
@@ -202,8 +208,9 @@ public class LoadService {
 
 				if (listCartonsL.isEmpty() && listCartonsM.isEmpty() && listCartonsS.isEmpty()) {
 					// la commande est ajoutée à la liste de cartons chargés
-					commandeService.deleteCommande(commande.getIdCommande()); // on supprime la commande de la liste (supprime le fichier)		
-			
+					commandeService.deleteCommande(commande.getIdCommande()); // on supprime la commande de la liste
+																				// (supprime le fichier)
+
 					break; // on sort du remplissage de l'étage
 
 				} else if ((!listCartonsL.isEmpty() || !listCartonsM.isEmpty() || !listCartonsS.isEmpty())
@@ -225,21 +232,26 @@ public class LoadService {
 
 			if (this.isCamionFull == true) { // si le camion est plein on sort de la boucle sur des commandes
 				isLoadedButNotFull = true;
-				camionService.makeCamionNonDisponible(idCamion); // passe le camion à l'état non disponible
 				break;
 			} else if (listCartonsL.isEmpty() && listCartonsM.isEmpty() && listCartonsS.isEmpty()) {
 				isLoadedButNotFull = true;
-				
 
 			}
+
 		} // end of loop commande
-		if(this.isCamionFull && listCommandes.size()==1) {
-			//si 1 une seule commande et qu'elle ne tien pas de la camion, on ne créé pas de fichier camionLoaded. La commande a été retirée. Le camion n'est pas plein
-			this.isCamionFull =false;
+		if (this.isCamionFull && listCommandes.size() == 1) {
+			// si 1 une seule commande et qu'elle ne tien pas de la camion, on ne créé pas
+			// de fichier camionLoaded. La commande a été retirée. Le camion n'est pas plein
+			this.isCamionFull = false;
 		} else {
+			if (isCamionFull) {
+				camionService.makeCamionNonDisponible(idCamion); // passe le camion à l'état non disponible
+				camionLoaded = new CamionLoaded(this.camionType, this.idCamion, listCartonLoaded);
+				camionLoadedService.writeCamionLoaded(camionLoaded);
+			}
 			camionLoaded = new CamionLoaded(this.camionType, this.idCamion, listCartonLoaded);
 			camionLoadedService.writeCamionLoaded(camionLoaded);
 		}
-		
+
 	}
 }

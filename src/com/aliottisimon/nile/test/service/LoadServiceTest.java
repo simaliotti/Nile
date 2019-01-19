@@ -38,11 +38,11 @@ class LoadServiceTest {
 			throws FileNotFoundException, ClassNotFoundException, IOException {
 
 		int numberOfCommandToGenerate = 1;
-		int numberOfCartonToGenerateByCommand = 80;
+		int numberOfCartonToGenerateByCommand = 60;
 
 		// genere une commande
 		CommandeService cs = new CommandeService();
-		cs.generateCommandeSpecifyQuantity(numberOfCommandToGenerate, numberOfCartonToGenerateByCommand);
+		List<Commande> listCommandeGenereted = cs.generateCommandeSpecifyQuantity(numberOfCommandToGenerate, numberOfCartonToGenerateByCommand);
 
 		// créé un camion de type L (écrit dans le fichier listCamions)
 		CamionService camionService = new CamionService();
@@ -137,7 +137,7 @@ class LoadServiceTest {
 		} else {
 			// supprime la commande crée pour le test dans le cas où elle n'a pas été
 			// chargée
-			cs.deleteCommande("Commande1");
+			cs.deleteCommande(listCommandeGenereted.get(0).getIdCommande());
 		}
 
 		// supprime le camion créé pour le test
@@ -159,11 +159,11 @@ class LoadServiceTest {
 			throws FileNotFoundException, ClassNotFoundException, IOException {
 
 		int numberOfCommandToGenerate = 1;
-		int numberOfCartonToGenerateByCommand = 40;
+		int numberOfCartonToGenerateByCommand = 50;
 
 		// genere une commande
 		CommandeService cs = new CommandeService();
-		cs.generateCommandeSpecifyQuantity(numberOfCommandToGenerate, numberOfCartonToGenerateByCommand);
+		List<Commande> listCommandeGenereted = cs.generateCommandeSpecifyQuantity(numberOfCommandToGenerate, numberOfCartonToGenerateByCommand);
 
 		// créé un camion de type L (écrit dans le fichier listCamions)
 		CamionService camionService = new CamionService();
@@ -258,7 +258,7 @@ class LoadServiceTest {
 		} else {
 			// supprime la commande crée pour le test dans le cas où elle n'a pas été
 			// chargée
-			cs.deleteCommande("Commande1");
+			cs.deleteCommande(listCommandeGenereted.get(0).getIdCommande());
 		}
 
 		// supprime le camion créé pour le test
@@ -284,7 +284,7 @@ class LoadServiceTest {
 
 		// genere une commande
 		CommandeService cs = new CommandeService();
-		cs.generateCommandeSpecifyQuantity(numberOfCommandToGenerate, numberOfCartonToGenerateByCommand);
+		List<Commande> listCommandeGenereted = cs.generateCommandeSpecifyQuantity(numberOfCommandToGenerate, numberOfCartonToGenerateByCommand);
 
 		// créé un camion de type L (écrit dans le fichier listCamions)
 		CamionService camionService = new CamionService();
@@ -379,7 +379,7 @@ class LoadServiceTest {
 		} else {
 			// supprime la commande crée pour le test dans le cas où elle n'a pas été
 			// chargée
-			cs.deleteCommande("Commande1");
+			cs.deleteCommande(listCommandeGenereted.get(0).getIdCommande());
 		}
 
 		// supprime le camion créé pour le test
@@ -404,7 +404,7 @@ class LoadServiceTest {
 
 		// genere une commande
 		CommandeService cs = new CommandeService();
-		cs.generateCommandeSpecifyQuantity(numberOfCommandToGenerate, numberOfCartonToGenerateByCommand);
+		List<Commande> listCommandeGenereted = cs.generateCommandeSpecifyQuantity(numberOfCommandToGenerate, numberOfCartonToGenerateByCommand);
 
 		List<Commande> listCommandes = cs.readCommande();
 
@@ -438,7 +438,7 @@ class LoadServiceTest {
 		} else {
 			// supprime la commande crée pour le test dans le cas où elle n'a pas été
 			// chargée
-			cs.deleteCommande("Commande1");
+			cs.deleteCommande(listCommandeGenereted.get(0).getIdCommande());
 		}
 
 		// supprime le camion créé pour le test

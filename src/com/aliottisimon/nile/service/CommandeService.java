@@ -10,38 +10,54 @@ import java.io.ObjectOutputStream;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.aliottisimon.nile.pojos.Carton;
 import com.aliottisimon.nile.pojos.Commande;
 
 import com.aliottisimon.nile.utils.SystemUtils;
 
+
 public class CommandeService {
 
+	private int numberOfCommand = 0;
 
-	private int numberOfCommand = 1;
-
-
-
-	
 	/**
-	 * Constructeur utilisé pour les tests, permet de choisir le nombre de commandes générées ainsi que de cartons
+	 * Constructeur qui récupère le dernier numero de commande
+	 * 
+	 * @param numberOfCommand
+	 * @throws FileNotFoundException
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 */
+	public CommandeService() throws FileNotFoundException, ClassNotFoundException, IOException {
+
+		this.numberOfCommand = dernierNumeroDeCommande();
+	}
+
+	/**
+	 * Methode utilisé pour les tests, permet de choisir le nombre de commandes
+	 * générées ainsi que de cartons
+	 * 
 	 * @param quantityCommande
 	 * @param quantityCarton
 	 * @throws FileNotFoundException
 	 * @throws ClassNotFoundException
 	 * @throws IOException
 	 */
-	public void generateCommandeSpecifyQuantity(int quantityCommande, int quantityCarton) throws FileNotFoundException, ClassNotFoundException, IOException {
+	public List<Commande> generateCommandeSpecifyQuantity(int quantityCommande, int quantityCarton)
+			throws FileNotFoundException, ClassNotFoundException, IOException {
 
+		List<Commande> listCommandesGenereted = new LinkedList();
 		Random random = new Random();
-		
-	//	numberOfCommandToGenerate
-		for (int i = 1; i <= quantityCommande; i++) {
 
-			String nameCommande = "Commande" + this.numberOfCommand;
+		// numberOfCommandToGenerate
+		for (int i = 1; i <= quantityCommande; i++) {
 			this.numberOfCommand++;
-			Commande commande = new Commande(nameCommande, quantityCarton);
+			String idCommande = "Commande" + this.numberOfCommand;
+			Commande commande = new Commande(idCommande, quantityCarton);
+			listCommandesGenereted.add(commande);
 			writeCommand(commande);
 
 			//
@@ -55,20 +71,25 @@ public class CommandeService {
 			System.out.println("Commande n° " + i + " créée avec succès");
 		}
 
+		return listCommandesGenereted;
 	}
-	
-	
-	
+
+	/**
+	 * Methode pour générer une commande
+	 * 
+	 * @throws FileNotFoundException
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 */
 	public void generateCommande() throws FileNotFoundException, ClassNotFoundException, IOException {
 
 		Random random = new Random();
 		int numberOfCommandToGenerate = (random.nextInt(6) + 1);
-	//	numberOfCommandToGenerate
+		// numberOfCommandToGenerate
 		for (int i = 1; i <= numberOfCommandToGenerate; i++) {
-
-			String nameCommande = "Commande" + this.numberOfCommand;
 			this.numberOfCommand++;
-			Commande commande = new Commande(nameCommande);
+			String idCommande = "Commande" + this.numberOfCommand;
+			Commande commande = new Commande(idCommande);
 			writeCommand(commande);
 
 			//
@@ -87,20 +108,17 @@ public class CommandeService {
 	public static void writeCommand(Commande commande)
 			throws FileNotFoundException, IOException, ClassNotFoundException {
 
-		//créé le repertoire si il n'existe pas
-		File filePath = new File(SystemUtils.TEST_FOLDER+"/commandes");
-		if(!filePath.exists()) {
+		// créé le repertoire si il n'existe pas
+		File filePath = new File(SystemUtils.TEST_FOLDER + "/commandes");
+		if (!filePath.exists()) {
 			filePath.mkdirs();
 		}
-	
-		
-		File fileCommande = new File(SystemUtils.TEST_FOLDER+"/commandes/" + commande.getIdCommande() + ".txt");
+
+		File fileCommande = new File(SystemUtils.TEST_FOLDER + "/commandes/" + commande.getIdCommande() + ".txt");
 
 		try (FileOutputStream fop = new FileOutputStream(fileCommande);
 				ObjectOutputStream oop = new ObjectOutputStream(fop)) {
 
-			
-			
 			if (!fileCommande.exists()) {
 				fileCommande.createNewFile();
 			}
@@ -116,7 +134,7 @@ public class CommandeService {
 		// Liste toutes les commandes
 		List<String> listCommandes = new LinkedList<>();
 
-		File file = new File(SystemUtils.TEST_FOLDER+"/commandes");
+		File file = new File(SystemUtils.TEST_FOLDER + "/commandes");
 
 		System.out.println("Liste des commandes enregistrés :");
 
@@ -133,20 +151,21 @@ public class CommandeService {
 			}
 
 		}
+		
 
 		List<Commande> commandes = new LinkedList<>();
-		
+
 		for (String nameCommande : listCommandes) {
 			// Lit chaque commande
-			File fileCommande = new File(SystemUtils.TEST_FOLDER+"/commandes/" + nameCommande + ".txt");
+			File fileCommande = new File(SystemUtils.TEST_FOLDER + "/commandes/" + nameCommande + ".txt");
 
 			try (FileInputStream fis = new FileInputStream(fileCommande);
 					ObjectInputStream ois = new ObjectInputStream(fis)) {
 
 				Commande commande = (Commande) ois.readObject();
 				commandes.add(commande);
-				
-				//Lecture des cartons de chaque commande
+
+				// Lecture des cartons de chaque commande
 				System.out.println("======================");
 				System.out.println(commande.getIdCommande());
 				for (Carton carton : commande.getListCarton()) {
@@ -160,13 +179,32 @@ public class CommandeService {
 			}
 
 		}
-	return commandes;
+		return commandes;
 	}
 
 	public void deleteCommande(String nameCommande) {
-		
-		File fileCommande = new File(SystemUtils.TEST_FOLDER+"/commandes/" + nameCommande + ".txt");
+
+		File fileCommande = new File(SystemUtils.TEST_FOLDER + "/commandes/" + nameCommande + ".txt");
 		fileCommande.delete();
 	}
-	
+
+	public int dernierNumeroDeCommande() throws FileNotFoundException, ClassNotFoundException, IOException {
+		List<Commande> listCommandes = readCommande();
+		int numeroDerniereCommande = 0;
+
+		if (!(listCommandes.isEmpty())) {
+			Stream<Commande> stream = listCommandes.stream();
+			List<String> listIdCommande = stream.map(commande -> commande.getIdCommande()).collect(Collectors.toList());
+			for (String idCommande : listIdCommande) {
+				String[] numero = idCommande.split("e");
+				int num = Integer.parseInt(numero[1]);
+				if (num > numeroDerniereCommande) {
+					numeroDerniereCommande = num;
+				}
+			}
+
+		}
+
+		return numeroDerniereCommande;
+	}
 }
