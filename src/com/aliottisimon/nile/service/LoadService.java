@@ -233,7 +233,13 @@ public class LoadService {
 
 			}
 		} // end of loop commande
-		camionLoaded = new CamionLoaded(this.camionType, this.idCamion, listCartonLoaded);
-		camionLoadedService.writeCamionLoaded(camionLoaded);
+		if(this.isCamionFull && listCommandes.size()==1) {
+			//si 1 une seule commande et qu'elle ne tien pas de la camion, on ne créé pas de fichier camionLoaded. La commande a été retirée. Le camion n'est pas plein
+			this.isCamionFull =false;
+		} else {
+			camionLoaded = new CamionLoaded(this.camionType, this.idCamion, listCartonLoaded);
+			camionLoadedService.writeCamionLoaded(camionLoaded);
+		}
+		
 	}
 }

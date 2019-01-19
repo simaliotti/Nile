@@ -155,4 +155,13 @@ public class CamionService {
 			writeCamion(listCamions);
 		}
 	}
+
+	public void deleteCamionFile() {
+		
+		File fileCamion = new File(SystemUtils.TEST_FOLDER + "/camions/listCamions.txt");
+		fileCamion.delete();
+		
+	}
+
 }
+

@@ -23,12 +23,48 @@ public class CommandeService {
 
 
 
+	
+	/**
+	 * Constructeur utilisé pour les tests, permet de choisir le nombre de commandes générées ainsi que de cartons
+	 * @param quantityCommande
+	 * @param quantityCarton
+	 * @throws FileNotFoundException
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 */
+	public void generateCommandeSpecifyQuantity(int quantityCommande, int quantityCarton) throws FileNotFoundException, ClassNotFoundException, IOException {
+
+		Random random = new Random();
+		
+	//	numberOfCommandToGenerate
+		for (int i = 1; i <= quantityCommande; i++) {
+
+			String nameCommande = "Commande" + this.numberOfCommand;
+			this.numberOfCommand++;
+			Commande commande = new Commande(nameCommande, quantityCarton);
+			writeCommand(commande);
+
+			//
+			System.out.println("======================");
+			System.out.println(commande.getIdCommande());
+			for (Carton carton : commande.getListCarton()) {
+				System.out.println(carton.getIdCarton());
+				System.out.println(carton.getType());
+
+			}
+			System.out.println("Commande n° " + i + " créée avec succès");
+		}
+
+	}
+	
+	
+	
 	public void generateCommande() throws FileNotFoundException, ClassNotFoundException, IOException {
 
 		Random random = new Random();
-		int numberOfCommandToGenerate = (random.nextInt(6) + 2);
+		int numberOfCommandToGenerate = (random.nextInt(6) + 1);
 	//	numberOfCommandToGenerate
-		for (int i = 1; i <= 1; i++) {
+		for (int i = 1; i <= numberOfCommandToGenerate; i++) {
 
 			String nameCommande = "Commande" + this.numberOfCommand;
 			this.numberOfCommand++;
@@ -51,7 +87,7 @@ public class CommandeService {
 	public static void writeCommand(Commande commande)
 			throws FileNotFoundException, IOException, ClassNotFoundException {
 
-		
+		//créé le repertoire si il n'existe pas
 		File filePath = new File(SystemUtils.TEST_FOLDER+"/commandes");
 		if(!filePath.exists()) {
 			filePath.mkdirs();

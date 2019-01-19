@@ -90,4 +90,12 @@ public class CamionLoadedService {
 		}
 		return camionLoaded;
 	}
+
+	public void deleteCamionLoaded(int idCamionLoaded) {
+		
+		File fileCamionLoaded = new File(SystemUtils.TEST_FOLDER + "/camionLoaded/CamionLoaded-"+idCamionLoaded+".txt");
+		fileCamionLoaded.delete();
+		
+	}
+
 }
