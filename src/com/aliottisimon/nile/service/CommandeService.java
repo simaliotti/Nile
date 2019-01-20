@@ -32,7 +32,6 @@ public class CommandeService {
 	 * @throws IOException
 	 */
 	public CommandeService() throws FileNotFoundException, ClassNotFoundException, IOException {
-
 		this.numberOfCommand = dernierNumeroDeCommande();
 	}
 
@@ -84,7 +83,7 @@ public class CommandeService {
 	public void generateCommande() throws FileNotFoundException, ClassNotFoundException, IOException {
 
 		Random random = new Random();
-		int numberOfCommandToGenerate = (random.nextInt(6) + 1);
+		int numberOfCommandToGenerate = (random.nextInt(10) + 1);
 		// numberOfCommandToGenerate
 		for (int i = 1; i <= numberOfCommandToGenerate; i++) {
 			this.numberOfCommand++;

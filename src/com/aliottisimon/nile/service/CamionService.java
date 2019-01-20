@@ -25,18 +25,18 @@ public class CamionService {
 
 		List<Camion> listCamions = new LinkedList();
 
-		System.out.println("Bienvenue dans le gestionnaire de votre parc");
+		System.out.println("               ==============  Gestionnaire du parc de camions  ==============");
 		displayCamionChoix();
 		System.out.println("");
 
-		System.out.println("Combien de camion de type SMALL possedez vous ?");
+		System.out.println("Combien de camion(s) de type SMALL possedez vous ?");
 		int numberS = Integer.valueOf(sc.input());
 		for (int i = 0; i < numberS; i++) {
 			Camion camion = createCamion(1);
 			listCamions.add(camion);
 		}
 
-		System.out.println("Combien de camion de type MEDIUM possedez vous ?");
+		System.out.println("Combien de camion(s) de type MEDIUM possedez vous ?");
 		int numberM = Integer.valueOf(sc.input());
 		for (int i = 0; i < numberM; i++) {
 			Camion camion = createCamion(2);
@@ -44,13 +44,15 @@ public class CamionService {
 
 		}
 
-		System.out.println("Combien de camion de type LARGE possedez vous ?");
+		System.out.println("Combien de camion(s) de type LARGE possedez vous ?");
 		int numberL = Integer.valueOf(sc.input());
 		for (int i = 0; i < numberL; i++) {
 			Camion camion = createCamion(3);
 			listCamions.add(camion);
 		}
+		System.out.println("===========GENERATING==========");
 		writeCamion(listCamions);
+		System.out.println("Votre parc a été enregistré avec succès");
 	}
 
 	public void displayCamionChoix() {
