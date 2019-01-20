@@ -263,7 +263,6 @@ public class LoadService {
 			this.isCamionFull = false;
 		} else {
 			if (isCamionFull) {
-				camionService.makeCamionNonDisponible(idCamion); // passe le camion à l'état non disponible
 				camionLoaded = new CamionLoaded(this.camionType, this.idCamion, listCartonLoaded);
 				camionLoadedService.writeCamionLoaded(camionLoaded);
 

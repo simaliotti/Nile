@@ -9,7 +9,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import javax.swing.ListCellRenderer;
 import javax.swing.text.Utilities;
 
 import com.aliottisimon.nile.model.CamionType;
@@ -120,11 +122,11 @@ public class CamionService {
 			List<Camion> listCamions = (List<Camion>) ois.readObject();
 
 			for (Camion camion : listCamions) {
-				System.out.println("-------CAMION---------");
-				System.out.println(camion.getId());
-				System.out.println(camion.getType().toString());
-				System.out.println(camion.isDisponible());
-				System.out.println("---------------");
+				System.out.println("");
+				System.out.println("===== Camion n°" + camion.getId() + "=====");
+				System.out.println("Type du camion : " + camion.getType().toString());
+				System.out.println("Disponibilité du camion : " + camion.isDisponible());
+				System.out.println("Camion en cours de chargement : " + camion.isEnCoursDeChargement());
 
 			}
 
@@ -132,6 +134,112 @@ public class CamionService {
 			e.printStackTrace();
 		}
 
+	}
+
+	public static List<Camion> readCamionNonDisponible()
+			throws FileNotFoundException, IOException, ClassNotFoundException {
+List<Camion> listCamionDispo = new LinkedList();
+		// Lit chaque commande
+		File fileCamion = new File(SystemUtils.TEST_FOLDER + "/camions/listCamions.txt");
+		List<Camion> listCamions = null;
+		try (FileInputStream fis = new FileInputStream(fileCamion);
+				ObjectInputStream ois = new ObjectInputStream(fis)) {
+
+		listCamions = (List<Camion>) ois.readObject();
+		
+			for (Camion camion : listCamions) {
+				if (camion.isDisponible() == false) {
+					System.out.println("");
+					System.out.println("===== Camion n°" + camion.getId() + "=====");
+					System.out.println("Type du camion : " + camion.getType().toString());
+					System.out.println("Disponibilité du camion : " + camion.isDisponible());
+					//System.out.println("Camion en cours de chargement : " + camion.isEnCoursDeChargement());
+					listCamionDispo.add(camion);
+				} 
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return listCamionDispo;
+	}
+	
+	
+	public static List<Camion> readCamionDisponible()
+			throws FileNotFoundException, IOException, ClassNotFoundException {
+List<Camion> listCamionDispo = new LinkedList();
+		// Lit chaque commande
+		File fileCamion = new File(SystemUtils.TEST_FOLDER + "/camions/listCamions.txt");
+		List<Camion> listCamions = null;
+		try (FileInputStream fis = new FileInputStream(fileCamion);
+				ObjectInputStream ois = new ObjectInputStream(fis)) {
+
+		listCamions = (List<Camion>) ois.readObject();
+		
+			for (Camion camion : listCamions) {
+				if (camion.isDisponible() == true) {
+					System.out.println("");
+					System.out.println("===== Camion n°" + camion.getId() + "=====");
+					System.out.println("Type du camion : " + camion.getType().toString());
+					System.out.println("Disponibilité du camion : " + camion.isDisponible());
+				//	System.out.println("Camion en cours de chargement : " + camion.isEnCoursDeChargement());
+					listCamionDispo.add(camion);
+				} 
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return listCamionDispo;
+	}
+	
+	public static List<Camion> returnCamionDisponible()
+			throws FileNotFoundException, IOException, ClassNotFoundException {
+List<Camion> listCamionDispo = new LinkedList();
+		// Lit chaque commande
+		File fileCamion = new File(SystemUtils.TEST_FOLDER + "/camions/listCamions.txt");
+		List<Camion> listCamions = null;
+		try (FileInputStream fis = new FileInputStream(fileCamion);
+				ObjectInputStream ois = new ObjectInputStream(fis)) {
+
+		listCamions = (List<Camion>) ois.readObject();
+		
+			for (Camion camion : listCamions) {
+				if (camion.isDisponible() == true) {
+					
+					listCamionDispo.add(camion);
+				} 
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return listCamionDispo;
+	}
+
+	public static Camion readCamionById(int id) {
+
+		// Lit chaque commande
+		File fileCamion = new File(SystemUtils.TEST_FOLDER + "/camions/listCamions.txt");
+
+		Camion camionSelected = null;
+		try (FileInputStream fis = new FileInputStream(fileCamion);
+				ObjectInputStream ois = new ObjectInputStream(fis)) {
+
+			List<Camion> listCamions = (List<Camion>) ois.readObject();
+
+			List<Camion> listCamionSelected = listCamions.stream().filter(camion -> camion.getId() == id)
+					.collect(Collectors.toList());
+			camionSelected = listCamionSelected.get(0);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return camionSelected;
 	}
 
 	public void makeCamionNonDisponible(int idCamionToDelete)
@@ -158,12 +266,35 @@ public class CamionService {
 		}
 	}
 
+	public void makeCamionEnChargement(int idCamionToDelete)
+			throws FileNotFoundException, IOException, ClassNotFoundException {
+		// Lit chaque commande
+		File fileCamion = new File(SystemUtils.TEST_FOLDER + "/camions/listCamions.txt");
+
+		try (FileInputStream fis = new FileInputStream(fileCamion);
+				ObjectInputStream ois = new ObjectInputStream(fis)) {
+
+			List<Camion> listCamions = (List<Camion>) ois.readObject();
+			Camion updatedCamion = null;
+			for (Camion camion : listCamions) {
+				if (camion.getId() == idCamionToDelete) {
+					updatedCamion = new Camion(camion.getType(), camion.getId());
+					updatedCamion.setEnCoursDeChargement(true);
+					listCamions.remove(camion);
+					listCamions.add(updatedCamion);
+					break;
+				}
+			}
+
+			writeCamion(listCamions);
+		}
+	}
+	
 	public void deleteCamionFile() {
-		
+
 		File fileCamion = new File(SystemUtils.TEST_FOLDER + "/camions/listCamions.txt");
 		fileCamion.delete();
-		
+
 	}
 
 }
-

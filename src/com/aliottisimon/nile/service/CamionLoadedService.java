@@ -58,6 +58,9 @@ public class CamionLoadedService {
 
 	}
 
+	
+	
+	
 	public static CamionLoaded readCamionLoaded(int idCamionLoaded)
 			throws FileNotFoundException, IOException, ClassNotFoundException {
 
@@ -74,7 +77,7 @@ public class CamionLoadedService {
 			System.out.println(camionLoaded.getListCartonLoaded());
 			for (CartonLoaded cartonLoaded : camionLoaded.getListCartonLoaded()) {
 				System.out.println("-------CartonLoaded---------");
-				System.out.println("id du carton: " + cartonLoaded.getCartonType());
+				System.out.println("type du carton: " + cartonLoaded.getCartonType());
 				System.out.println("id du carton: " + cartonLoaded.getId());
 				System.out.println("Emplacement dans le rack: " + cartonLoaded.getIdPlace());
 				System.out.println("numero du rack: " + cartonLoaded.getIdRack());

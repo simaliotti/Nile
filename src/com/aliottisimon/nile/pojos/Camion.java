@@ -9,6 +9,7 @@ public class Camion implements Serializable{
 	CamionType type = null;
 	int id = 0;
 	boolean disponible = true;
+	boolean enCoursDeChargement = false;
 	
 	
 	
@@ -16,6 +17,18 @@ public class Camion implements Serializable{
 
 		this.type = type;
 		this.id = id;
+	}
+
+
+
+	public boolean isEnCoursDeChargement() {
+		return enCoursDeChargement;
+	}
+
+
+
+	public void setEnCoursDeChargement(boolean enCoursDeChargement) {
+		this.enCoursDeChargement = enCoursDeChargement;
 	}
 
 

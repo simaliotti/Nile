@@ -13,11 +13,11 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.aliottisimon.nile.pojos.Camion;
 import com.aliottisimon.nile.pojos.Carton;
 import com.aliottisimon.nile.pojos.Commande;
 
 import com.aliottisimon.nile.utils.SystemUtils;
-
 
 public class CommandeService {
 
@@ -128,19 +128,16 @@ public class CommandeService {
 
 	}
 
-	public static List<Commande> readCommande() throws FileNotFoundException, IOException, ClassNotFoundException {
-
+	public void displayAllCommandes() {
 		// Liste toutes les commandes
 		List<String> listCommandes = new LinkedList<>();
 
 		File file = new File(SystemUtils.TEST_FOLDER + "/commandes");
 
-		System.out.println("Liste des commandes enregistrés :");
-
 		String[] tabCommandes = file.list();
 
 		if (tabCommandes.length == 0) {
-			System.out.println("La liste est vide, pas de clubs enregistrés");
+			System.out.println("La liste est vide, pas de commandes enregistrées");
 		} else {
 
 			for (String string : tabCommandes) {
@@ -150,7 +147,74 @@ public class CommandeService {
 			}
 
 		}
-		
+
+	}
+
+	public List<String> returnAllCommandes() {
+		// Liste toutes les commandes
+		List<String> listCommandes = new LinkedList<>();
+
+		File file = new File(SystemUtils.TEST_FOLDER + "/commandes");
+
+		String[] tabCommandes = file.list();
+
+		if (tabCommandes.length == 0) {
+			System.out.println("La liste est vide, pas de commandes enregistrées");
+		} else {
+
+			for (String string : tabCommandes) {
+				String[] nameCommande = string.split("(.txt)");
+				listCommandes.add(nameCommande[0]);
+			}
+
+		}
+		return listCommandes;
+	}
+
+	public static void readCommandeById(int id) throws FileNotFoundException, IOException, ClassNotFoundException {
+
+		File fileCommande = new File(SystemUtils.TEST_FOLDER + "/commandes/Commande" + id + ".txt");
+
+		try (FileInputStream fis = new FileInputStream(fileCommande);
+				ObjectInputStream ois = new ObjectInputStream(fis)) {
+
+			Commande commande = (Commande) ois.readObject();
+
+			// Lecture des cartons
+
+			System.out.println("                ====" + commande.getIdCommande() + "====");
+			System.out.println("");
+			for (Carton carton : commande.getListCarton()) {
+				System.out.println("Id carton : " + carton.getIdCarton() + " / Carton de " + carton.getType());
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public static List<Commande> readCommande() throws FileNotFoundException, IOException, ClassNotFoundException {
+
+		// Liste toutes les commandes
+		List<String> listCommandes = new LinkedList<>();
+
+		File file = new File(SystemUtils.TEST_FOLDER + "/commandes");
+
+		String[] tabCommandes = file.list();
+
+		if (tabCommandes.length == 0) {
+			
+		} else {
+
+			for (String string : tabCommandes) {
+				String[] nameCommande = string.split("(.txt)");
+
+				listCommandes.add(nameCommande[0]);
+			}
+
+		}
 
 		List<Commande> commandes = new LinkedList<>();
 
@@ -165,13 +229,13 @@ public class CommandeService {
 				commandes.add(commande);
 
 				// Lecture des cartons de chaque commande
-				System.out.println("======================");
-				System.out.println(commande.getIdCommande());
+				// System.out.println("======================");
+				// System.out.println(commande.getIdCommande());
 				for (Carton carton : commande.getListCarton()) {
-					System.out.println(carton.getIdCarton());
-					System.out.println(carton.getType());
+					// System.out.println(carton.getIdCarton());
+					// System.out.println(carton.getType());
 				}
-				System.out.println("----------------");
+				// System.out.println("----------------");
 
 			} catch (Exception e) {
 				e.printStackTrace();
