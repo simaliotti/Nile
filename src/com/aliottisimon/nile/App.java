@@ -1,5 +1,6 @@
 package com.aliottisimon.nile;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
@@ -11,6 +12,7 @@ import com.aliottisimon.nile.service.CamionService;
 import com.aliottisimon.nile.service.CommandeService;
 import com.aliottisimon.nile.service.LoadService;
 import com.aliottisimon.nile.utils.MyScanner;
+import com.aliottisimon.nile.utils.SystemUtils;
 
 public class App {
 
@@ -19,14 +21,14 @@ public class App {
 	CamionService camionService = new CamionService();
 	MyScanner sc = new MyScanner();
 
-/**
- * Lance le programme et permet de naviguer dans les menus
- * @throws FileNotFoundException
- * @throws ClassNotFoundException
- * @throws IOException
- */
+	/**
+	 * Lance le programme et permet de naviguer dans les menus
+	 * 
+	 * @throws FileNotFoundException
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 */
 	public App() throws FileNotFoundException, ClassNotFoundException, IOException {
-
 	}
 
 	public void launchApp() throws FileNotFoundException, ClassNotFoundException, IOException {
@@ -39,10 +41,12 @@ public class App {
 		System.out.println("Bienvenue dans votre application de gestion de chargement des stocks !");
 		System.out.println("");
 		System.out.println("");
-		System.out.println("Pour une première utilisation, ne pas oublier de configurer les variables System dans le package \"utils\" et la classe \"SystemUtils\" ");
+		System.out.println(
+				"Pour une première utilisation, ne pas oublier de configurer les variables System dans le package \"utils\" et la classe \"SystemUtils\" ");
 		System.out.println("");
 		System.out.println("");
-		System.out.println("Pour que les tests Junit fonctionnent normalement, les différents dossiers de l'application à savoir : \"camion\", \"commandes\" et \"camionLoaded\" doivent êtres vides ");
+		System.out.println(
+				"Pour que les tests Junit fonctionnent normalement, les différents dossiers de l'application à savoir : \"camion\", \"commandes\" et \"camionLoaded\" doivent êtres vides ");
 		System.out.println("==============================================================================");
 		System.out.println("");
 		System.out.println("");
