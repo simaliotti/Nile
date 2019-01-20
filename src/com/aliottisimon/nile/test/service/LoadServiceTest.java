@@ -53,7 +53,7 @@ class LoadServiceTest {
 
 		// charge le camion
 		LoadService ls = new LoadService(listCamions.get(0).getType(), listCamions.get(0).getId());
-		ls.loadCamion();
+		ls.loadAllPossibleCommandsInTruck();
 		CamionLoadedService cls = new CamionLoadedService();
 
 		File fileCamionLoaded = new File(
@@ -160,7 +160,7 @@ class LoadServiceTest {
 			throws FileNotFoundException, ClassNotFoundException, IOException {
 
 		int numberOfCommandToGenerate = 1;
-		int numberOfCartonToGenerateByCommand = 50;
+		int numberOfCartonToGenerateByCommand = 30;
 
 		// genere une commande
 		CommandeService cs = new CommandeService();
@@ -175,7 +175,7 @@ class LoadServiceTest {
 
 		// charge le camion
 		LoadService ls = new LoadService(listCamions.get(0).getType(), listCamions.get(0).getId());
-		ls.loadCamion();
+		ls.loadAllPossibleCommandsInTruck();
 		CamionLoadedService cls = new CamionLoadedService();
 
 		File fileCamionLoaded = new File(
@@ -297,7 +297,7 @@ class LoadServiceTest {
 
 		// charge le camion
 		LoadService ls = new LoadService(listCamions.get(0).getType(), listCamions.get(0).getId());
-		ls.loadCamion();
+		ls.loadAllPossibleCommandsInTruck();
 		CamionLoadedService cls = new CamionLoadedService();
 
 		File fileCamionLoaded = new File(
@@ -404,8 +404,8 @@ class LoadServiceTest {
 	void test_Chargement_camion_plusieurs_commande() throws FileNotFoundException, ClassNotFoundException, IOException {
 
 		int sizeCamion = 3; // 3 = L, 2 = M, 1 = S
-		int numberOfCommandToGenerate = 8;
-		int numberOfCartonToGenerateByCommand = 5;
+		int numberOfCommandToGenerate = 2;
+		int numberOfCartonToGenerateByCommand = 60;
 
 		// genere une commande
 		CommandeService cs = new CommandeService();
@@ -420,7 +420,7 @@ class LoadServiceTest {
 
 		// charge le camion
 		LoadService ls = new LoadService(listCamions.get(0).getType(), listCamions.get(0).getId());
-		ls.loadCamion();
+		ls.loadAllPossibleCommandsInTruck();
 		CamionLoadedService cls = new CamionLoadedService();
 
 		File fileCamionLoaded = new File(
@@ -556,7 +556,7 @@ class LoadServiceTest {
 
 		// charge le camion
 		LoadService ls = new LoadService(listCamions.get(0).getType(), listCamions.get(0).getId());
-		ls.loadCamion();
+		ls.loadAllPossibleCommandsInTruck();
 		CamionLoadedService cls = new CamionLoadedService();
 
 		File fileCamionLoaded = new File(
@@ -615,7 +615,7 @@ class LoadServiceTest {
 
 		// charge le camion
 		LoadService ls = new LoadService(listCamions.get(0).getType(), listCamions.get(0).getId());
-		ls.loadCamion();
+		ls.loadAllPossibleCommandsInTruck();
 		CamionLoadedService cls = new CamionLoadedService();
 
 		File fileCamionLoaded = new File(

@@ -22,7 +22,6 @@ public class LoadService {
 	private int idCamion = 0;
 	private List<Commande> listCommandes = null;
 	boolean isCamionFull = false;
-	boolean isLoadedButNotFull = false;
 
 	CommandeService commandeService = new CommandeService();
 	CamionService camionService = new CamionService();
@@ -50,9 +49,27 @@ public class LoadService {
 	}
 
 	/**
-	 * Méthode permeettant de charger un camion avec le maximum de commandes
-	 * possibles. Si une commande n'est pas completement chargée lorsque le camion
-	 * est plein, elle sera retirée du camion.
+	 * Methode permettant de charger un camion avec le plus de commandes possible.
+	 * Si une commande est trop importante pour être chargée, le programme essayera
+	 * quand même de charger les suivantes et ne sera pas bloqué
+	 * 
+	 * @throws FileNotFoundException
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 */
+	public void loadAllPossibleCommandsInTruck() throws FileNotFoundException, ClassNotFoundException, IOException {
+
+		while (!(this.listCommandes.isEmpty())) {
+			this.isCamionFull = false;
+			loadCamion();
+
+		}
+
+	}
+
+	/**
+	 * Methode de chargement du camion. Essaye de charger les commandes dans
+	 * l'ordre.
 	 * 
 	 * @throws IOException
 	 * @throws ClassNotFoundException
@@ -60,7 +77,8 @@ public class LoadService {
 	 */
 	public void loadCamion() throws FileNotFoundException, ClassNotFoundException, IOException {
 
-		int commandeNumber = listCommandes.size();
+		List<Commande> listCommandesToRemove = new LinkedList();
+		Commande commandeEnCoursDeTraitement = null;
 		Commande commandeEnCours = listCommandes.get(0);
 		List<CartonLoaded> listCartonLoaded = new LinkedList();
 		CamionLoaded camionLoaded = null;
@@ -73,6 +91,7 @@ public class LoadService {
 
 		// Boucle sur chaque commande
 		for (Commande commande : listCommandes) {
+			commandeEnCoursDeTraitement = commande;
 
 			// recupere liste des cartons d'une commande par type
 			Stream<Carton> streamL = commande.getListCarton().stream();
@@ -95,8 +114,7 @@ public class LoadService {
 				if (commandeEnCours.equals(commande)) {
 					rackEnCoursChargement = 1;
 				}
-				
-				
+
 				for (int rackNumber = rackEnCoursChargement; rackNumber <= 3; rackNumber++) {
 					rackEnCoursChargement = rackNumber;
 
@@ -231,27 +249,30 @@ public class LoadService {
 			} // end of loop floor
 
 			if (this.isCamionFull == true) { // si le camion est plein on sort de la boucle sur des commandes
-				isLoadedButNotFull = true;
+				listCommandesToRemove.add(commandeEnCoursDeTraitement);
 				break;
 			} else if (listCartonsL.isEmpty() && listCartonsM.isEmpty() && listCartonsS.isEmpty()) {
-				isLoadedButNotFull = true;
 
 			}
-
+			listCommandesToRemove.add(commandeEnCoursDeTraitement);
 		} // end of loop commande
 		if (this.isCamionFull && listCommandes.size() == 1) {
 			// si 1 une seule commande et qu'elle ne tien pas de la camion, on ne créé pas
 			// de fichier camionLoaded. La commande a été retirée. Le camion n'est pas plein
+
 			this.isCamionFull = false;
 		} else {
 			if (isCamionFull) {
 				camionService.makeCamionNonDisponible(idCamion); // passe le camion à l'état non disponible
 				camionLoaded = new CamionLoaded(this.camionType, this.idCamion, listCartonLoaded);
 				camionLoadedService.writeCamionLoaded(camionLoaded);
+
 			}
 			camionLoaded = new CamionLoaded(this.camionType, this.idCamion, listCartonLoaded);
 			camionLoadedService.writeCamionLoaded(camionLoaded);
 		}
-
+		for (Commande commandeToRemove : listCommandesToRemove) {
+			this.listCommandes.remove(commandeToRemove);
+		}
 	}
 }
