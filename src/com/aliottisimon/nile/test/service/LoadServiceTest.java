@@ -42,7 +42,8 @@ class LoadServiceTest {
 
 		// genere une commande
 		CommandeService cs = new CommandeService();
-		List<Commande> listCommandeGenereted = cs.generateCommandeSpecifyQuantity(numberOfCommandToGenerate, numberOfCartonToGenerateByCommand);
+		List<Commande> listCommandeGenereted = cs.generateCommandeSpecifyQuantity(numberOfCommandToGenerate,
+				numberOfCartonToGenerateByCommand);
 
 		// créé un camion de type L (écrit dans le fichier listCamions)
 		CamionService camionService = new CamionService();
@@ -163,7 +164,8 @@ class LoadServiceTest {
 
 		// genere une commande
 		CommandeService cs = new CommandeService();
-		List<Commande> listCommandeGenereted = cs.generateCommandeSpecifyQuantity(numberOfCommandToGenerate, numberOfCartonToGenerateByCommand);
+		List<Commande> listCommandeGenereted = cs.generateCommandeSpecifyQuantity(numberOfCommandToGenerate,
+				numberOfCartonToGenerateByCommand);
 
 		// créé un camion de type L (écrit dans le fichier listCamions)
 		CamionService camionService = new CamionService();
@@ -284,7 +286,8 @@ class LoadServiceTest {
 
 		// genere une commande
 		CommandeService cs = new CommandeService();
-		List<Commande> listCommandeGenereted = cs.generateCommandeSpecifyQuantity(numberOfCommandToGenerate, numberOfCartonToGenerateByCommand);
+		List<Commande> listCommandeGenereted = cs.generateCommandeSpecifyQuantity(numberOfCommandToGenerate,
+				numberOfCartonToGenerateByCommand);
 
 		// créé un camion de type L (écrit dans le fichier listCamions)
 		CamionService camionService = new CamionService();
@@ -388,6 +391,142 @@ class LoadServiceTest {
 	}
 
 	/**
+	 * Test qui vérifie que le chargement est bien effectué dans chaque rack Vérifie
+	 * que la longueur des cartons chargé dans chaque rack est égale ou inférieure à
+	 * la longueur du rack. Permet de regler le nombre de commandes, de cartons par
+	 * commande, et la taille du camion
+	 * 
+	 * @throws FileNotFoundException
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 */
+	@Test
+	void test_Chargement_camion_plusieurs_commande() throws FileNotFoundException, ClassNotFoundException, IOException {
+
+		int sizeCamion = 3; // 3 = L, 2 = M, 1 = S
+		int numberOfCommandToGenerate = 8;
+		int numberOfCartonToGenerateByCommand = 5;
+
+		// genere une commande
+		CommandeService cs = new CommandeService();
+		List<Commande> listCommandeGenereted = cs.generateCommandeSpecifyQuantity(numberOfCommandToGenerate,
+				numberOfCartonToGenerateByCommand);
+
+		// créé un camion de type L (écrit dans le fichier listCamions)
+		CamionService camionService = new CamionService();
+		List<Camion> listCamions = new LinkedList();
+		listCamions.add(camionService.createCamion(sizeCamion));
+		camionService.writeCamion(listCamions);
+
+		// charge le camion
+		LoadService ls = new LoadService(listCamions.get(0).getType(), listCamions.get(0).getId());
+		ls.loadCamion();
+		CamionLoadedService cls = new CamionLoadedService();
+
+		File fileCamionLoaded = new File(
+				SystemUtils.TEST_FOLDER + "/camionLoaded/CamionLoaded-" + listCamions.get(0).getId() + ".txt");
+		if (fileCamionLoaded.exists()) {
+
+			CamionLoaded camionLoaded = cls.readCamionLoaded(listCamions.get(0).getId());
+
+			// liste des cartons chargés
+			List<CartonLoaded> listCartonLoaded = camionLoaded.getListCartonLoaded();
+
+			// etage1
+
+			List<CartonLoaded> rack1etage1 = listCartonLoaded.stream()
+					.filter(cartonLoaded -> cartonLoaded.getFloor() == 1 && cartonLoaded.getIdRack() == 1)
+					.collect(Collectors.toList());
+
+			List<CartonLoaded> rack2etage1 = listCartonLoaded.stream()
+					.filter(cartonLoaded -> cartonLoaded.getFloor() == 1 && cartonLoaded.getIdRack() == 2)
+					.collect(Collectors.toList());
+
+			List<CartonLoaded> rack3etage1 = listCartonLoaded.stream()
+					.filter(cartonLoaded -> cartonLoaded.getFloor() == 1 && cartonLoaded.getIdRack() == 3)
+					.collect(Collectors.toList());
+
+			System.out.println("Etage1");
+			System.out.println(Tools.calculTailleUtiliseeParRack(rack1etage1, listCommandeGenereted));
+			System.out.println(Tools.calculTailleUtiliseeParRack(rack2etage1, listCommandeGenereted));
+			System.out.println(Tools.calculTailleUtiliseeParRack(rack3etage1, listCommandeGenereted));
+
+			assertTrue(Tools.calculTailleUtiliseeParRack(rack1etage1, listCommandeGenereted) <= listCamions.get(0)
+					.getType().getLongueur());
+			assertTrue(Tools.calculTailleUtiliseeParRack(rack2etage1, listCommandeGenereted) <= listCamions.get(0)
+					.getType().getLongueur());
+			assertTrue(Tools.calculTailleUtiliseeParRack(rack3etage1, listCommandeGenereted) <= listCamions.get(0)
+					.getType().getLongueur());
+
+			// etage 2
+			List<CartonLoaded> rack1etage2 = listCartonLoaded.stream()
+					.filter(cartonLoaded -> cartonLoaded.getFloor() == 2 && cartonLoaded.getIdRack() == 1)
+					.collect(Collectors.toList());
+
+			List<CartonLoaded> rack2etage2 = listCartonLoaded.stream()
+					.filter(cartonLoaded -> cartonLoaded.getFloor() == 2 && cartonLoaded.getIdRack() == 2)
+					.collect(Collectors.toList());
+
+			List<CartonLoaded> rack3etage2 = listCartonLoaded.stream()
+					.filter(cartonLoaded -> cartonLoaded.getFloor() == 2 && cartonLoaded.getIdRack() == 3)
+					.collect(Collectors.toList());
+
+			System.out.println("Etage2");
+			System.out.println(Tools.calculTailleUtiliseeParRack(rack1etage2, listCommandeGenereted));
+			System.out.println(Tools.calculTailleUtiliseeParRack(rack2etage2, listCommandeGenereted));
+			System.out.println(Tools.calculTailleUtiliseeParRack(rack3etage2, listCommandeGenereted));
+
+			assertTrue(Tools.calculTailleUtiliseeParRack(rack1etage2, listCommandeGenereted) <= listCamions.get(0)
+					.getType().getLongueur());
+			assertTrue(Tools.calculTailleUtiliseeParRack(rack2etage2, listCommandeGenereted) <= listCamions.get(0)
+					.getType().getLongueur());
+			assertTrue(Tools.calculTailleUtiliseeParRack(rack3etage2, listCommandeGenereted) <= listCamions.get(0)
+					.getType().getLongueur());
+
+			// etage 2
+			List<CartonLoaded> rack1etage3 = listCartonLoaded.stream()
+					.filter(cartonLoaded -> cartonLoaded.getFloor() == 3 && cartonLoaded.getIdRack() == 1)
+					.collect(Collectors.toList());
+
+			List<CartonLoaded> rack2etage3 = listCartonLoaded.stream()
+					.filter(cartonLoaded -> cartonLoaded.getFloor() == 3 && cartonLoaded.getIdRack() == 2)
+					.collect(Collectors.toList());
+
+			List<CartonLoaded> rack3etage3 = listCartonLoaded.stream()
+					.filter(cartonLoaded -> cartonLoaded.getFloor() == 3 && cartonLoaded.getIdRack() == 3)
+					.collect(Collectors.toList());
+
+			System.out.println("Etage3");
+			System.out.println(Tools.calculTailleUtiliseeParRack(rack1etage3, listCommandeGenereted));
+			System.out.println(Tools.calculTailleUtiliseeParRack(rack2etage3, listCommandeGenereted));
+			System.out.println(Tools.calculTailleUtiliseeParRack(rack3etage3, listCommandeGenereted));
+
+			assertTrue(Tools.calculTailleUtiliseeParRack(rack1etage3, listCommandeGenereted) <= listCamions.get(0)
+					.getType().getLongueur());
+			assertTrue(Tools.calculTailleUtiliseeParRack(rack2etage3, listCommandeGenereted) <= listCamions.get(0)
+					.getType().getLongueur());
+			assertTrue(Tools.calculTailleUtiliseeParRack(rack3etage3, listCommandeGenereted) <= listCamions.get(0)
+					.getType().getLongueur());
+
+			// supprime le camionLoaded pour le test
+			cls.deleteCamionLoaded(camionLoaded.getId());
+
+		}
+
+		// suprrime la commande crée pour le test lorsqu'elle n'a pas été chargée
+		for (Commande commande : listCommandeGenereted) {
+			File fileCommande = new File(SystemUtils.TEST_FOLDER + "/commandes/" + commande.getIdCommande() + ".txt");
+			if (fileCommande.exists()) {
+				cs.deleteCommande(commande.getIdCommande());
+			}
+		}
+
+		// supprime le camion créé pour le test
+		camionService.deleteCamionFile();
+
+	}
+
+	/**
 	 * Test qui vérifie qu'il y a le même nombre de cartons chargés que de cartons
 	 * dans la commande à charger
 	 * 
@@ -404,7 +543,8 @@ class LoadServiceTest {
 
 		// genere une commande
 		CommandeService cs = new CommandeService();
-		List<Commande> listCommandeGenereted = cs.generateCommandeSpecifyQuantity(numberOfCommandToGenerate, numberOfCartonToGenerateByCommand);
+		List<Commande> listCommandeGenereted = cs.generateCommandeSpecifyQuantity(numberOfCommandToGenerate,
+				numberOfCartonToGenerateByCommand);
 
 		List<Commande> listCommandes = cs.readCommande();
 
@@ -431,7 +571,6 @@ class LoadServiceTest {
 			int quantiteCartonsCommande = listCommandes.get(0).getListCarton().size();
 			int quantiteCartonsLoaded = listCartonLoaded.size();
 			assertTrue(quantiteCartonsCommande == quantiteCartonsLoaded);
-			
 
 			// supprime le camionLoaded pour le test
 			cls.deleteCamionLoaded(camionLoaded.getId());
@@ -439,6 +578,88 @@ class LoadServiceTest {
 			// supprime la commande crée pour le test dans le cas où elle n'a pas été
 			// chargée
 			cs.deleteCommande(listCommandeGenereted.get(0).getIdCommande());
+		}
+
+		// supprime le camion créé pour le test
+		camionService.deleteCamionFile();
+
+	}
+
+	/**
+	 * Test qui vérifie qu'il y a le même nombre de cartons chargés que de cartons
+	 * dans la commande à charger.
+	 * 
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 * @throws FileNotFoundException
+	 */
+	@Test
+	void verifie_cartonLoaded_equals_cartonCommande_pour_plusieurs_commande()
+			throws FileNotFoundException, ClassNotFoundException, IOException {
+
+		int numberOfCommandToGenerate = 6;
+		int numberOfCartonToGenerateByCommand = 5;
+
+		// genere une commande
+		CommandeService cs = new CommandeService();
+		List<Commande> listCommandeGenereted = cs.generateCommandeSpecifyQuantity(numberOfCommandToGenerate,
+				numberOfCartonToGenerateByCommand);
+
+		List<Commande> listCommandes = cs.readCommande();
+
+		// créé un camion de type L (écrit dans le fichier listCamions)
+		CamionService camionService = new CamionService();
+		List<Camion> listCamions = new LinkedList();
+		listCamions.add(camionService.createCamion(3));
+		camionService.writeCamion(listCamions);
+
+		// charge le camion
+		LoadService ls = new LoadService(listCamions.get(0).getType(), listCamions.get(0).getId());
+		ls.loadCamion();
+		CamionLoadedService cls = new CamionLoadedService();
+
+		File fileCamionLoaded = new File(
+				SystemUtils.TEST_FOLDER + "/camionLoaded/CamionLoaded-" + listCamions.get(0).getId() + ".txt");
+		if (fileCamionLoaded.exists()) {
+
+			CamionLoaded camionLoaded = cls.readCamionLoaded(listCamions.get(0).getId());
+
+			// liste des cartons chargés
+			List<CartonLoaded> listCartonLoaded = camionLoaded.getListCartonLoaded();
+
+			List<Commande> listCommandesNonPassees = cs.readCommande(); // liste des commandes restantes
+			List<Commande> listCommandesPassees = listCommandes;
+
+			if (!listCommandesNonPassees.isEmpty()) {
+				for (Commande commande : listCommandes) {
+					for (Commande commandeNonPassee : listCommandesPassees) {
+						if (commande.getIdCommande().equals(commandeNonPassee.getIdCommande())) {
+							listCommandesPassees.remove(commande);
+						}
+					}
+				}
+
+			}
+
+			Integer quantiteCartonsCommande = listCommandesPassees.stream()
+					.map(commande -> commande.getListCarton().size()).reduce(0, Integer::sum);
+
+			int quantiteCartonsLoaded = listCartonLoaded.size();
+			assertTrue(quantiteCartonsCommande == quantiteCartonsLoaded);
+
+			// supprime le camionLoaded pour le test
+			cls.deleteCamionLoaded(camionLoaded.getId());
+		} else {
+			// supprime la commande crée pour le test dans le cas où elle n'a pas été
+			// chargée
+			cs.deleteCommande(listCommandeGenereted.get(0).getIdCommande());
+		}
+		for (Commande commande : listCommandeGenereted) { // supprime les commandes crée pour le test qui n'ont pas été
+															// chargées
+			File fileCommande = new File(SystemUtils.TEST_FOLDER + "/commandes/" + commande.getIdCommande() + ".txt");
+			if (fileCommande.exists()) {
+				cs.deleteCommande(commande.getIdCommande());
+			}
 		}
 
 		// supprime le camion créé pour le test

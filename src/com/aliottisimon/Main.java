@@ -19,14 +19,14 @@ public class Main {
 
 		MyScanner sc = new MyScanner();
 		CommandeService cs = new CommandeService();
-		cs.generateCommandeSpecifyQuantity(2, 60);
+		cs.generateCommandeSpecifyQuantity(12, 5);
 		//cs.readCommande();
 	//	System.out.println("---------------------------------------");
 		// cs.generateCommande();
 		// cs.readCommande();
 
 		CamionService camionService = new CamionService();
-		camionService.menuCreateCamionPark(sc);
+		//.menuCreateCamionPark(sc);
 		 //camionService.readCamion();
 		LoadService ls = new LoadService(CamionType.TYPE_L, 1);
 		ls.loadCamion();
